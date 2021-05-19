@@ -1,4 +1,4 @@
-0. [Routing Project Overview](../home)
+0. [Routing Project Overview](home)
 1. Assignment  
   1.1 [General Instructions](../1.-Assignment/1.1-General-Instructions)  
   1.2 [Your mini Internet](../1.-Assignment/1.2-Your-mini-Internet)  
