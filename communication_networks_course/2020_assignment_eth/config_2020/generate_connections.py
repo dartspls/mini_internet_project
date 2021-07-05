@@ -67,7 +67,7 @@ def get_subnet_ebgp(n=0):
     mod = line_nb%100
     div = int(line_nb/100)
 
-    return '179.'+str(div)+'.'+str(mod)+'.'+str(n)+'/24'
+    return '179.'+str(div)+'.'+str(mod)+'.'+str(n)+'/30'
 
 #
 # line_nb2 = 1
