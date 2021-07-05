@@ -53,7 +53,7 @@ gw_l2_ () {
 subnet_router () {
   local n_grp="$1" n_router="$2"
 
-  echo "${n_grp}"".""$(($n_router+151))"".0.1/24"
+  echo "${n_grp}"".""$(($n_router+151))"".0.1/32"
 }
 
 subnet_router_router_intern () {
@@ -82,15 +82,15 @@ subnet_router_router_extern () {
 
     if [ "${device}" = "1" ] ; then
 
-        echo "179."${div}"."${mod}".1/24"
+        echo "179."${div}"."${mod}".1/30"
 
     elif [ "${device}" = "2" ] ; then
 
-        echo "179."${div}"."${mod}".2/24"
+        echo "179."${div}"."${mod}".2/30"
 
     elif [ "${device}" = "bridge" ] ; then
 
-        echo "179."${div}"."${mod}".0/24"
+        echo "179."${div}"."${mod}".0/30"
 
     fi
 }
