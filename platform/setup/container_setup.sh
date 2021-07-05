@@ -48,7 +48,8 @@ for ((k=0;k<group_numbers;k++)); do
             -v /etc/timezone:/etc/timezone:ro \
             -v /etc/localtime:/etc/localtime:ro \
             -v "${DIRECTORY}"/config/welcoming_message.txt:/etc/motd:ro \
-            thomahol/d_ssh
+            -v "${DIRECTORY}"/config/course_scripts/:/scripts/:ro \
+            d_ssh_stable
 
         CONTAINERS+=("${group_number}_ssh")
 
@@ -69,6 +70,7 @@ for ((k=0;k<group_numbers;k++)); do
                 --sysctl net.ipv4.conf.default.rp_filter=0 \
                 --sysctl net.ipv4.conf.lo.rp_filter=0 \
                 --sysctl net.ipv4.icmp_echo_ignore_broadcasts=0 \
+                -v "${DIRECTORY}"/config/course_scripts/:/scripts/:ro \
                 -v /etc/timezone:/etc/timezone:ro \
                 -v /etc/localtime:/etc/localtime:ro thomahol/d_switch
 
@@ -89,7 +91,8 @@ for ((k=0;k<group_numbers;k++)); do
                     --sysctl net.ipv4.icmp_ratelimit=0 \
                     --sysctl net.ipv4.icmp_echo_ignore_broadcasts=0 \
                     -v /etc/timezone:/etc/timezone:ro \
-                    -v /etc/localtime:/etc/localtime:ro thomahol/d_host
+                    -v "${DIRECTORY}"/config/course_scripts/:/scripts/:ro \
+                    -v /etc/localtime:/etc/localtime:ro d_host
 
                 CONTAINERS+=("${group_number}""_L2_""${l2name}""_""${hname}")
             fi
@@ -122,7 +125,8 @@ for ((k=0;k<group_numbers;k++)); do
                 -v "${location}"/daemons:/etc/frr/daemons \
                 -v "${location}"/frr.conf:/etc/frr/frr.conf \
                 -v /etc/timezone:/etc/timezone:ro \
-                -v /etc/localtime:/etc/localtime:ro thomahol/d_router
+                -v "${DIRECTORY}"/config/course_scripts/:/scripts/:ro \
+                -v /etc/localtime:/etc/localtime:ro d_router_stable
 
             CONTAINERS+=("${group_number}""_""${rname}""router")
 
@@ -134,6 +138,7 @@ for ((k=0;k<group_numbers;k++)); do
                     --sysctl net.ipv4.icmp_ratelimit=0 \
                     --sysctl net.ipv4.icmp_echo_ignore_broadcasts=0 \
                     -v /etc/timezone:/etc/timezone:ro \
+                    -v "${DIRECTORY}"/config/course_scripts/:/scripts/:ro \
                     -v /etc/localtime:/etc/localtime:ro thomahol/d_host \
                     # add this for bgpsimple -v ${DIRECTORY}/docker_images/host/bgpsimple.pl:/home/bgpsimple.pl \
 
