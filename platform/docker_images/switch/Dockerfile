@@ -1,6 +1,6 @@
 FROM debian:stretch
 RUN apt-get update && apt-get install -y rsyslog locales iputils-ping inetutils-traceroute openssh-server \
-  openvswitch-switch openvswitch-common vim tcpdump net-tools dnsutils
+  openvswitch-switch openvswitch-common vim tcpdump net-tools dnsutils iptables
 
 # Set locale
 RUN sed -i -e 's/# \(en_US\.UTF-8 .*\)/\1/' /etc/locale.gen && \

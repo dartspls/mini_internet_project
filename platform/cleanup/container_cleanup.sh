@@ -87,4 +87,4 @@ docker kill MEASUREMENT &>/dev/nul || true &
 docker kill MATRIX &>/dev/nul || true &
 
 wait
-docker system prune -f
+#docker system prune -f
