@@ -39,6 +39,9 @@ for ((k=0;k<group_numbers;k++)); do
         readarray routers < "${DIRECTORY}"/config/$group_router_config
         readarray l2_switches < "${DIRECTORY}"/config/$group_layer2_switches
         readarray l2_hosts < "${DIRECTORY}"/config/$group_layer2_hosts
+        # Add 'extra' links between hosts and switches
+        # allows us to use a host as a Linux router
+        readarray -O "${#l2_hosts[@]}" l2_hosts < "${DIRECTORY}"/config/${group_layer2_hosts}.extra
         readarray l2_links < "${DIRECTORY}"/config/$group_layer2_links
         n_routers=${#routers[@]}
         n_l2_switches=${#l2_switches[@]}
