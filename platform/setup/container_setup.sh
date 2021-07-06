@@ -88,6 +88,7 @@ for ((k=0;k<group_numbers;k++)); do
                 docker run -itd --net='none' --dns="${subnet_dns%/*}" --cap-add=NET_ADMIN \
                     --cpus=2 --pids-limit 100 --hostname "${hname}" \
                     --name="${group_number}""_L2_""${l2name}""_""${hname}" \
+                    --sysctl net.ipv4.ip_forward=1 \
                     --sysctl net.ipv4.icmp_ratelimit=0 \
                     --sysctl net.ipv4.icmp_echo_ignore_broadcasts=0 \
                     -v /etc/timezone:/etc/timezone:ro \
