@@ -1,8 +1,7 @@
-vpn_1		UNIV   CERN    10000    1000    30
-student_1	UNIV   CERN    10000    1000    10
-staff_1		UNIV   CERN    10000    1000    20
-student_2	UNIV   ETHZ    10000	1000    10
-staff_2		UNIV   ETHZ    10000    1000    20
-student_3	UNIV   EPFL    10000    1000    10
-staff_3		UNIV   EPFL    10000    1000    20
-vpn_3		UNIV   EPFL    10000    1000    30
+student_1	UNIV   GBLOCK    10000    1000    10
+staff_1		UNIV   GBLOCK    10000    1000    20
+student_2	UNIV   RBLOCK    10000	  1000    10
+staff_2		UNIV   RBLOCK    10000    1000    20
+student_3	UNIV   SBLOCK    10000    1000    10
+router_rs	UNIV   SBLOCK    10000    1000    20
+staff_3		UNIV   SBLOCK    10000    1000    20
