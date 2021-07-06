@@ -90,4 +90,5 @@ docker kill MEASUREMENT &>/dev/null || true &
 docker kill MATRIX &>/dev/null || true &
 
 wait
-docker system prune -f
+# COMPX304 don't prune images, this can delete our custom images
+#docker system prune -f
