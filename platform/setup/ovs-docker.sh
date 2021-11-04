@@ -108,11 +108,19 @@ add_port () {
                 shift
                 ;;
             --delay=*)
-                DELAY=${1#*=}
+                if [ ${1#*=} -ne 0 ]; then
+                    DELAY=${1#*=}
+                fi
                 shift
                 ;;
             --throughput=*)
-                THROUGHPUT=${1#*=}
+                if [ ${1#*=} -ne 0 ]; then
+                    THROUGHPUT=${1#*=}
+                fi
+                shift
+                ;;
+            --down)
+                DOWN=1
                 shift
                 ;;
             *)
@@ -160,14 +168,20 @@ add_port () {
     echo "PID=$PID">> groups/ip_setup.sh
     echo "create_netns_link" >> groups/ip_setup.sh
     echo "ip link set "${PORTNAME}_c" netns "\$PID"" >> groups/ip_setup.sh
-    echo "ip netns exec "\$PID" ip link set dev "${PORTNAME}_c" name "$INTERFACE"" >> groups/ip_setup.sh
-    echo "ip netns exec "\$PID" ip link set "$INTERFACE" up" >> groups/ip_setup.sh
+    if [ -n "$DOWN" ]; then
+        echo "ip netns exec "\$PID" ip link set dev "${PORTNAME}_c" name "$INTERFACE"" >> groups/ip_setup.sh
+    else
+        echo "ip netns exec "\$PID" ip link set dev "${PORTNAME}_c" name "$INTERFACE" up" >> groups/ip_setup.sh
+    fi
 
     echo "  PID=\$(docker inspect -f '{{.State.Pid}}' "$CONTAINER")">> groups/restart_container.sh
     echo "  create_netns_link" >> groups/restart_container.sh
     echo "  ip link set "${PORTNAME}_c" netns "\$PID"" >> groups/restart_container.sh
-    echo "  ip netns exec "\$PID" ip link set dev "${PORTNAME}_c" name "$INTERFACE"" >> groups/restart_container.sh
-    echo "  ip netns exec "\$PID" ip link set "$INTERFACE" up" >> groups/restart_container.sh
+    if [ -n "$DOWN" ]; then
+        echo "  ip netns exec "\$PID" ip link set dev "${PORTNAME}_c" name "$INTERFACE"" >> groups/restart_container.sh
+    else
+        echo "  ip netns exec "\$PID" ip link set dev "${PORTNAME}_c" name "$INTERFACE" up" >> groups/restart_container.sh
+    fi
 
     if [ -n "$MTU" ]; then
         ip netns exec "$PID" ip link set dev "$INTERFACE" mtu "$MTU"
