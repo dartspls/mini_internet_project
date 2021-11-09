@@ -53,6 +53,7 @@ for ((k=0;k<group_numbers;k++)); do
         location="${DIRECTORY}"/groups/g"${group_number}"
         touch  "${location}"/frr.conf
         touch  "${location}"/looking_glass.txt
+        touch  "${location}"/looking_glass_json.txt
         cp config/daemons "${location}"/daemons
     fi
 done

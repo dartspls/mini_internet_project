@@ -155,6 +155,7 @@ for ((k=0;k<group_numbers;k++));do
         done
 
     else # If IXP
+        # 304: updated to use the FRRouting image, rather than the old Quagga image
         touch "${DIRECTORY}"/groups/g"${group_number}"/init_full_conf.sh
         chmod +x "${DIRECTORY}"/groups/g"${group_number}"/init_full_conf.sh
 
@@ -162,7 +163,9 @@ for ((k=0;k<group_numbers;k++));do
 
         echo "#!/bin/bash" >> "${location}"
         echo "vtysh  -c 'conf t' \\" >> "${location}"
-        echo "-c 'bgp multiple-instance' \\" >> "${location}"
+
+	docker exec -d "${group_number}"_IXP bash -c "ip link add name IXP type bridge"
+	docker exec -d "${group_number}"_IXP bash -c "ip link set IXP up"
 
         for ((i=0;i<n_extern_links;i++)); do
             row_i=(${extern_links[$i]})
@@ -183,23 +186,25 @@ for ((k=0;k<group_numbers;k++));do
             	subnet2="$(subnet_router_IXP "${grp_1}" "${grp_2}" "IXP")"
 
 
-            	echo " -c 'ip community-list "${grp_1}" permit "${grp_2}"":""${grp_1}"' \\" >> "${location}"
-            	echo " -c 'route-map "${grp_1}"_EXPORT permit 10' \\" >> "${location}"
+            	echo " -c 'bgp community-list "${grp_1}" permit "${grp_2}"":""${grp_1}"' \\" >> "${location}"
+            	echo " -c 'route-map "${grp_1}"_IN permit 10' \\" >> "${location}"
             	echo " -c 'set ip next-hop "${subnet1%/*}"' \\" >> "${location}"
                 echo " -c 'exit' \\" >> "${location}"
-            	echo " -c 'route-map "${grp_1}"_IMPORT permit 10' \\" >> "${location}"
+            	echo " -c 'route-map "${grp_1}"_OUT permit 10' \\" >> "${location}"
             	echo " -c 'match community "${grp_1}"' \\" >> "${location}"
             	echo " -c 'exit' \\" >> "${location}"
             	echo " -c 'router bgp "${grp_2}"' \\" >> "${location}"
                 echo " -c 'bgp router-id 180.80.${grp_2}.0' \\" >> "${location}"
             	echo " -c 'neighbor "${subnet1%/*}" remote-as "${grp_1}"' \\" >> "${location}"
+            	echo " -c 'address-family ipv4 unicast' \\" >> "${location}"
             	echo " -c 'neighbor "${subnet1%/*}" activate' \\" >> "${location}"
             	echo " -c 'neighbor "${subnet1%/*}" route-server-client' \\" >> "${location}"
-            	echo " -c 'neighbor "${subnet1%/*}" route-map "${grp_1}"_IMPORT import' \\" >> "${location}"
-            	echo " -c 'neighbor "${subnet1%/*}" route-map "${grp_1}"_EXPORT export' \\" >> "${location}"
+            	echo " -c 'neighbor "${subnet1%/*}" route-map "${grp_1}"_IN in' \\" >> "${location}"
+            	echo " -c 'neighbor "${subnet1%/*}" route-map "${grp_1}"_OUT out' \\" >> "${location}"
+            	echo " -c 'exit' \\" >> "${location}"
             	echo " -c 'exit' \\" >> "${location}"
 
-                docker exec -d "${group_number}"_IXP bash -c "ovs-vsctl add-port IXP grp_${grp_1}"
+                docker exec -d "${group_number}"_IXP bash -c "ip link set grp_${grp_1} master IXP"
             fi
         done
 

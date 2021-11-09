@@ -49,7 +49,7 @@ for ((k=0;k<group_numbers;k++)); do
             -v /etc/localtime:/etc/localtime:ro \
             -v "${DIRECTORY}"/config/welcoming_message.txt:/etc/motd:ro \
             -v "${DIRECTORY}"/config/course_scripts/:/scripts/:ro \
-            d_ssh_stable
+            d_ssh_304
 
         CONTAINERS+=("${group_number}_ssh")
 
@@ -77,7 +77,7 @@ for ((k=0;k<group_numbers;k++)); do
                 --sysctl net.ipv6.icmp.ratelimit=0 \
                 -v "${DIRECTORY}"/config/course_scripts/:/scripts/:ro \
                 -v /etc/timezone:/etc/timezone:ro \
-                -v /etc/localtime:/etc/localtime:ro thomahol/d_switch
+                -v /etc/localtime:/etc/localtime:ro d_switch_304
 
             CONTAINERS+=(${group_number}_L2_${l2name}_${sname})
         done
@@ -142,7 +142,7 @@ for ((k=0;k<group_numbers;k++)); do
                 -v "${location}"/frr.conf:/etc/frr/frr.conf \
                 -v /etc/timezone:/etc/timezone:ro \
                 -v "${DIRECTORY}"/config/course_scripts/:/scripts/:ro \
-                -v /etc/localtime:/etc/localtime:ro d_router_stable
+                -v /etc/localtime:/etc/localtime:ro d_router_304
 
             CONTAINERS+=("${group_number}""_""${rname}""router")
 
@@ -169,7 +169,10 @@ for ((k=0;k<group_numbers;k++)); do
         location="${DIRECTORY}"/groups/g"${group_number}"
         docker run -itd --net='none' --name="${group_number}""_IXP" \
             --pids-limit 100 --hostname "${group_number}""_IXP" \
-            -v "${location}"/daemons:/etc/quagga/daemons \
+            -v "${location}"/looking_glass.txt:/home/looking_glass.txt \
+            -v "${location}"/looking_glass_json.txt:/home/looking_glass_json.txt \
+            -v "${location}"/daemons:/etc/frr/daemons \
+            -v "${location}"/frr.conf:/etc/frr/frr.conf \
             --privileged \
             --sysctl net.ipv4.ip_forward=1 \
             --sysctl net.ipv4.icmp_ratelimit=0 \
@@ -184,7 +187,7 @@ for ((k=0;k<group_numbers;k++)); do
             -v /etc/timezone:/etc/timezone:ro \
             -v /etc/localtime:/etc/localtime:ro \
             -v "${location}"/looking_glass.txt:/home/looking_glass.txt \
-            thomahol/d_ixp
+	    d_router_304
 
        CONTAINERS+=("${group_number}""_IXP")
     fi
