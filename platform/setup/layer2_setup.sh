@@ -64,13 +64,11 @@ for ((k=0;k<group_numbers;k++)); do
             connected="${switch_l[2]}"
             sys_id="${switch_l[3]}"
             stp_prio="${switch_l[4]}"
-
+            # 304: disable stp as it is not needed
             docker exec -d "${group_number}""_L2_""${l2name}"_${sname} ovs-vsctl \
                 -- add-br br0 \
-                -- set bridge br0 stp_enable=true \
-                -- set-fail-mode br0 standalone \
-                -- set bridge br0 other_config:stp-system-id=${sys_id} \
-                -- set bridge br0 other_config:stp-priority=$stp_prio
+                -- set bridge br0 stp_enable=false \
+                -- set-fail-mode br0 standalone
         done
 
         for ((l=0;l<n_l2_links;l++)); do
@@ -136,7 +134,7 @@ for ((k=0;k<group_numbers;k++)); do
 
                 ./setup/ovs-docker.sh add-port "${br_name}" "${group_number}"-"${sname}" \
                 ${group_number}_L2_${l2name}_${hname} \
-                --delay="${delay}" --throughput="${throughput}"
+                --delay="${delay}" --throughput="${throughput}" --down
 
                 ./setup/ovs-docker.sh connect-ports ${br_name} \
                 ${group_number}-${hname} ${group_number}_L2_${l2name}_${sname} \

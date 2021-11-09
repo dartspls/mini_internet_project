@@ -4,6 +4,9 @@
 # links defined in ./config/internal_links_config.txt
 # ip subnets defined in ./config/subnet_config.sh
 
+# 304: Skip MPLS as it is not used
+exit 0
+
 set -o errexit
 set -o pipefail
 set -o nounset
