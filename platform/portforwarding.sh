@@ -11,7 +11,7 @@
 # Starting from this port, map each group's ssh port
 # e.g. With an offset of 2000, G1 receives port 2001
 # and the measurement host 2099.
-PORT_OFFSET=2000
+PORT_OFFSET=52000
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 source "${DIRECTORY}"/config/subnet_config.sh
