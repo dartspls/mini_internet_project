@@ -1,0 +1,15 @@
+#!/bin/sh
+
+IFACES=$(ifquery --exclude=ssh --exclude=lo --list)
+
+if [ -z "${IFACES}" ]; then
+	echo "No interfaces found configured in /etc/network/interfaces"
+	exit 0
+fi
+
+for i in ${IFACES}; do
+	echo Removing configuration from "$i"
+	ip addr flush dev "$i"
+	ip link set dev "$i" down
+	ifdown --force "$i" > /dev/null 2>&1
+done
