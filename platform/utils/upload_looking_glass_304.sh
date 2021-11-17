@@ -46,6 +46,11 @@ do
 
             #rm -r G$group_number
             echo $group_number done
+        else
+            mkdir -p ${WEBROOT}/looking_glass/G${group_number}
+
+            cp groups/g${group_number}/looking_glass.txt ${WEBROOT}/looking_glass/G$group_number/LG.txt
+            echo $group_number done
         fi
     done
     sleep 120
