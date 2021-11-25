@@ -1,16 +1,17 @@
 #!/bin/bash
 #
-# Upload the looking glass on a web server
-# 304 Dumps to ~/for_web
-
-# REQUIREMENT: make sure to upload you public in the remote server where you
-# want to upload the looking glass. And change the username when doing the scp.
+# Upload the looking glass to the locally running running webserver
+# By default "/var/www/html/" or to the path given by the first argument
 
 set -o errexit
 set -o pipefail
 set -o nounset
 
 WEBROOT=/var/www/html/
+if [[ "$#" -ge 1 ]]; then
+    WEBROOT="$1"
+fi
+
 # read configs
 readarray groups < config/AS_config.txt
 group_numbers=${#groups[@]}
@@ -38,19 +39,16 @@ do
                 property1="${router_i[1]}"
                 property2="${router_i[2]}"
 
-                cp groups/g${group_number}/${rname}/looking_glass.txt ${WEBROOT}/looking_glass/G$group_number/${rname}.txt
+                cp "groups/g${group_number}/${rname}/looking_glass.txt" "${WEBROOT}/looking_glass/G$group_number/${rname}.txt"
 
-                echo $group_number $rname
+                echo "$group_number" "$rname"
             done
-            #scp -r G$group_number thomahol@virt07.ethz.ch:/home/web_commnet/public_html/routing_project/looking_glass/
-
-            #rm -r G$group_number
             echo $group_number done
         else
-            mkdir -p ${WEBROOT}/looking_glass/G${group_number}
+            mkdir -p "${WEBROOT}/looking_glass/G${group_number}"
 
-            cp groups/g${group_number}/looking_glass.txt ${WEBROOT}/looking_glass/G$group_number/LG.txt
-            echo $group_number done
+            cp "groups/g${group_number}/looking_glass.txt" "${WEBROOT}/looking_glass/G$group_number/LG.txt"
+            echo "$group_number" done
         fi
     done
     sleep 120

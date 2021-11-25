@@ -1,0 +1,53 @@
+<html>
+<head>
+
+<title>COMPX304 Mini-Internet Project</title>
+<!-- Bootstrap -->
+<link rel="stylesheet" href="matrix/css/bootstrap.min.css">
+<link rel="stylesheet" href="matrix/css/bootstrap-theme.min.css">
+</head>
+
+<main role="main" class="container">
+<h1>COMPX304 Mini-Internet Project</h1>
+
+<p>
+This website hosts some of the debugging resources for the mini-Internet assignment.
+These tools are similar to those deployed on the real Internet.
+You can find the assignment itself and other resources on the course Moodle page.
+</p>
+
+
+<h2>Route Tables (Looking Glass)</h2>
+<p>You can access the routes that every router on the mini-Internet Access here: <a href="looking_glass">looking glass</a><br />
+These are ordered by AS number then router name. For example, the Tier1 AS 1 routes for HAML are here: <a href="looking_glass/G1/HAML.txt">looking_glass/G1/HAML.txt</a></p>
+
+<h2>Connectivity Matrix</h2>
+<p>The connectivity matrix actively probes reachability within the mini-Internet. It shows which ASes are reachable from others.<br />
+You can access the connectivity matrix here: <a href="matrix/matrix.html">matrix/matrix.html</a></p>
+
+<h2>Connection List</h2>
+<p>The list of links connecting ASes, the relationship with the AS on the link, and the addresses to use on that link.<br />
+Access here: <a href="as_connections.txt">as_connections.txt</a></p>
+
+<h2>BGP Analyzer</h2>
+
+<p>
+This tool shows if an AS is following the correct policy with
+its announcements over the IXP.
+
+<br/>
+<br/>
+<b>Note: This tool only detects incorrect announcements, not
+	missing announcements. If you are not sharing any routes
+	over BGP your configuration is incorrect, but this tool
+	won't detect that case. It doesn't guarantee that your
+	configuration is correct.</b>
+
+</p>
+
+Access here: <a href="bgp_analyzer/analysis.html">analysis.html</a></p>
+
+</main>
+
+
+</html>
