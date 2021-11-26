@@ -29,7 +29,7 @@ for ((k=0;k<group_numbers;k++)); do
             ufw allow "$((group_number+PORT_OFFSET))"
         fi
         subnet=$(subnet_ext_sshContainer "${group_number}" "sshContainer")
-        ssh -i groups/id_rsa -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking no" -f -N -L 0.0.0.0:"$((group_number+PORT_OFFSET))":"${subnet%/*}":22 root@${subnet%/*}
+        ssh -i groups/id_rsa -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking no" -o "ExitOnForwardFailure=yes" -f -N -L 0.0.0.0:"$((group_number+PORT_OFFSET))":"${subnet%/*}":22 root@${subnet%/*} || true
     fi
 done
 
@@ -38,7 +38,7 @@ if command -v ufw > /dev/null 2>&1; then
     ufw allow $((99+PORT_OFFSET))
 fi
 subnet=$(subnet_ext_sshContainer "${group_number}" "MEASUREMENT")
-ssh -i groups/id_rsa -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking no" -f -N -L 0.0.0.0:$((99+PORT_OFFSET)):"${subnet%/*}":22 root@${subnet%/*}
+ssh -i groups/id_rsa -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking no" -o "ExitOnForwardFailure=yes" -f -N -L 0.0.0.0:$((99+PORT_OFFSET)):"${subnet%/*}":22 root@${subnet%/*} || true
 
 
 # for pid in $(ps aux | grep ssh | grep StrictHostKeyChecking | tr -s ' ' | cut -f 2 -d ' '); do sudo kill -9 $pid; done
