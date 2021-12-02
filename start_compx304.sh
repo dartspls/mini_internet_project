@@ -301,7 +301,7 @@ if grep "Apache2 Ubuntu Default Page" "$web_root/index.html" &>/dev/null; then
   mv "$web_root/index.html" "$web_root/index.html.bak"
 fi
 if [[ ! -f "$web_root/index.html" ]]; then
-  cp ../index_304.html "$web_root/index.html"
+  cp ../config-304/index_304.html "$web_root/index.html"
 fi
 if [[ ! -d "$web_root/matrix/css" ]]; then
   cp -r ./docker_images/matrix/css "$web_root/matrix/"
