@@ -15,7 +15,7 @@ updated them for the mini-Internet.
 ## Setup
 
 First, configure a network that is large enough for the class size. See
-[./config-304/](config-304/) for the configuration that I used in 2021 and a
+[config-304/](config-304/) for the configuration that I used in 2021 and a
 script to generate networks of different sizes. Note, that only transit
 networks are useable by students and that the AS size listed includes stub and
 tier1 ASes. It is always better to allocate more student ASes than the class
@@ -117,33 +117,37 @@ For example, consider installing netcat to all L2 hosts. (Not that you should
 need to do this now as netcat is now included in the host image.)
 1. Enter an instance of docker container where you want to install the package.
    For this example, we use the L2 host east-1 from group 10.
-```rsanger@mini:~$ docker exec -it 10_L2_UNIV_east-1 bash```
+   ```
+   rsanger@mini:~$ docker exec -it 10_L2_UNIV_east-1 bash
+   ```
 
 2. Run the apt command to install the required package with ```--print-uris```
    option to find a list of dependencies that need to be installed.
-```
-root@east-1:/# apt install --print-uris --no-install-recommends netcat
-...
-After this operation, 173 kB of additional disk space will be used.
-'http://deb.debian.org/debian/pool/main/n/netcat/netcat-traditional_1.10-41+b1_amd64.deb' netcat-traditional_1.10-41+b1_amd64.deb 66992 MD5Sum:34cd3767eaab5bfbf7aa1ad7752e3019
-'http://deb.debian.org/debian/pool/main/n/netcat/netcat_1.10-41_all.deb' netcat_1.10-41_all.deb 8962 MD5Sum:ec4bc75c60f49b670ea902c4b76d543d
-```
+   ```
+   root@east-1:/# apt install --print-uris --no-install-recommends netcat
+   ...
+   After this operation, 173 kB of additional disk space will be used.
+   'http://deb.debian.org/debian/pool/main/n/netcat/netcat-traditional_1.10-41+b1_amd64.deb' netcat-traditional_1.10-41+b1_amd64.deb 66992 MD5Sum:34cd3767eaab5bfbf7aa1ad7752e3019
+   'http://deb.debian.org/debian/pool/main/n/netcat/netcat_1.10-41_all.deb' netcat_1.10-41_all.deb 8962 MD5Sum:ec4bc75c60f49b670ea902c4b76d543d
+   ```
 3. On the mini-Internet server, download the packages listed to
    `./platform/config/course_scripts/`
 4. Use dpkg to install the packages in the order listed on the test machine,
    and verify the package installs correctly.
-```root@east-1:/# dpkg -i /scripts/netcat-traditional_1.10-41+b1_amd64.deb /scripts/netcat_1.10-41_all.deb```
+   ```
+   root@east-1:/# dpkg -i /scripts/netcat-traditional_1.10-41+b1_amd64.deb /scripts/netcat_1.10-41_all.deb
+   ```
 
 5. Write a script to install on all hosts, you can find examples in
-   [./platform/utils/](./platform/utils/). The following bash script installs
-netcat to all east-1 and east-2 hosts. The filters (```-f name=east-1 -f
-name=east-2```) match any container with either east-1 or east-2 in their name,
-you could add additional filters to include more hosts.
-```
-for container in $(docker ps -f name=east-1 -f name=east-2 --format="{{.Names}}"); do
-    docker exec "$container" dpkg -i /scripts/netcat-traditional_1.10-41+b1_amd64.deb /scripts/netcat_1.10-41_all.deb
-done
-```
+   [platform/utils/](platform/utils/). The following bash script installs
+   netcat to all east-1 and east-2 hosts. The filters (```-f name=east-1 -f
+   name=east-2```) match any container with either east-1 or east-2 in their name,
+   you could add additional filters to include more hosts.
+   ```
+   for container in $(docker ps -f name=east-1 -f name=east-2 --format="{{.Names}}"); do
+      docker exec "$container" dpkg -i /scripts/netcat-traditional_1.10-41+b1_amd64.deb /scripts/netcat_1.10-41_all.deb
+   done
+   ```
 
 
 ## Troubleshooting
@@ -158,13 +162,17 @@ possible that uncleanly closed would reach this limit and prevent future logins
 If students cannot access their ssh container
 1. On the server, an ssh process forwards each groups ssh port to make it
    publicly accessible. Check that this port forward hasn't died:
-```rsanger@mini:~$ netstat -tnl```
-If it has run the ```portforwarding.sh``` script in the ```platform/```
-directory again.
+   ```
+   rsanger@mini:~$ netstat -tnl
+   ```
+   If it has run the ```portforwarding.sh``` script in the ```platform/```
+   directory again.
 2. Use docker to access ssh container and check for the running processes, if
    sshd is not running start it again using.
-```rsanger@mini:~$ docker exec -it 10-ssh bash```
-```root@g10-proxy:~# /usr/sbin/sshd```
+   ```
+   rsanger@mini:~$ docker exec -it 10-ssh bash
+   root@g10-proxy:~# /usr/sbin/sshd
+   ```
 3. Check the number of processes running on the ssh container, there is a limit
    of 100. This previously caused issues with uncleanly closed ssh sessions,
    however, this is fixed now. Kill excess processes and try logging in again.
@@ -172,8 +180,10 @@ directory again.
 If students can access their ssh container, but not hosts or routers.
 1. The student has likely overwritten the preinstalled ssh private key. You can
    find a backup copy in ```platform/groups/gX/id_rsa```, copy this to
-```.ssh/id_rsa``` on ssh container.
-```rsanger@mini:~$ docker cp ./platform/groups/id_rsa 10-ssh:/root/.ssh/id_rsa```
+   ```.ssh/id_rsa``` on ssh container.
+   ```
+   rsanger@mini:~$ docker cp ./platform/groups/id_rsa 10-ssh:/root/.ssh/id_rsa
+   ```
 2. If a single container cannot be reached then it is possible that ssh has
    only died in that container. Use docker to access the container and run
    ```/usr/sbin/sshd``` again. Also, check the process limit has not been
@@ -185,7 +195,9 @@ It is possible that in the iptables lab a student accidentally blocks traffic
 from the ssh port by adding rules to the INPUT chain. To fix this, you will
 need to access the docker image directly and flush the rules from iptables.
 For example:
-```docker exec 10-L2-UNIV-east-1 iptables --flush```
+```
+docker exec 10-L2-UNIV-east-1 iptables --flush
+```
 
 ### Restarting the server running the mini-Internet
 

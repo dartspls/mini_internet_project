@@ -119,7 +119,7 @@ network size you create. Unfortunately, drawing the diagram remains manual.
 ## Configuration Files
 
 The configuration files are documented here:
-[./platform/README.md](./platform/README.md).
+[../platform/README.md](../platform/README.md).
 ```layer2_hosts_config.txt.extra``` is a new configuration file for 304.
 
 ### Layer2_hosts_config.txt.extra
